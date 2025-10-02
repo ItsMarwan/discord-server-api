@@ -13,10 +13,15 @@ export default async function handler(req, res) {
     );
 
     if (!response.ok) {
-      return res.status(response.status).json({ error: "Failed to fetch guild info" });
+      const text = await response.text();
+      return res.status(response.status).json({
+        error: "Failed to fetch guild info",
+        details: text
+      });
     }
 
     const data = await response.json();
+
     res.status(200).json({
       id: data.id,
       name: data.name,
