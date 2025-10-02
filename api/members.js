@@ -1,5 +1,5 @@
 export default async function handler(req, res) {
-  const { guild } = req.query; // Get server ID from URL query
+  const { guild } = req.query;
   const BOT_TOKEN = process.env.DISCORD_BOT_TOKEN;
 
   if (!guild) {
@@ -7,18 +7,16 @@ export default async function handler(req, res) {
   }
 
   try {
-    const response = await fetch(`https://discord.com/api/v10/guilds/${guild}?with_counts=true`, {
-      headers: {
-        Authorization: `Bot ${BOT_TOKEN}`,
-      },
-    });
+    const response = await fetch(
+      `https://discord.com/api/v10/guilds/${guild}?with_counts=true`,
+      { headers: { Authorization: `Bot ${BOT_TOKEN}` } }
+    );
 
     if (!response.ok) {
       return res.status(response.status).json({ error: "Failed to fetch guild info" });
     }
 
     const data = await response.json();
-
     res.status(200).json({
       id: data.id,
       name: data.name,
