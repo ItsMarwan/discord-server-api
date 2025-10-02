@@ -1,20 +1,20 @@
 const BADGE_FLAGS = {
-  1 << 0:  "STAFF",
-  1 << 1:  "PARTNER",
-  1 << 2:  "HYPESQUAD_EVENTS",
-  1 << 3:  "BUG_HUNTER_LEVEL_1",
-  1 << 6:  "HYPESQUAD_BRAVERY",
-  1 << 7:  "HYPESQUAD_BRILLIANCE",
-  1 << 8:  "HYPESQUAD_BALANCE",
-  1 << 9:  "EARLY_SUPPORTER",
-  1 << 10: "TEAM_USER",
-  1 << 12: "SYSTEM",
-  1 << 14: "BUG_HUNTER_LEVEL_2",
-  1 << 16: "VERIFIED_BOT",
-  1 << 17: "EARLY_VERIFIED_BOT_DEVELOPER",
-  1 << 18: "DISCORD_CERTIFIED_MODERATOR",
-  1 << 19: "BOT_HTTP_INTERACTIONS",
-  1 << 22: "ACTIVE_DEVELOPER",
+  1: "STAFF",
+  2: "PARTNER",
+  4: "HYPESQUAD_EVENTS",
+  8: "BUG_HUNTER_LEVEL_1",
+  64: "HYPESQUAD_BRAVERY",
+  128: "HYPESQUAD_BRILLIANCE",
+  256: "HYPESQUAD_BALANCE",
+  512: "EARLY_SUPPORTER",
+  1024: "TEAM_USER",
+  4096: "SYSTEM",
+  16384: "BUG_HUNTER_LEVEL_2",
+  65536: "VERIFIED_BOT",
+  131072: "EARLY_VERIFIED_BOT_DEVELOPER",
+  262144: "DISCORD_CERTIFIED_MODERATOR",
+  524288: "BOT_HTTP_INTERACTIONS",
+  4194304: "ACTIVE_DEVELOPER"
 };
 
 function parseBadges(flags) {
@@ -37,6 +37,7 @@ export default async function handler(req, res) {
   }
 
   try {
+    // Check membership
     const memberRes = await fetch(
       `https://discord.com/api/v10/guilds/${guild}/members/${user}`,
       { headers: { Authorization: `Bot ${BOT_TOKEN}` } }
@@ -48,6 +49,7 @@ export default async function handler(req, res) {
         .json({ error: "User not in guild or cannot access member", details: text });
     }
 
+    // Fetch user info
     const userRes = await fetch(
       `https://discord.com/api/v10/users/${user}`,
       { headers: { Authorization: `Bot ${BOT_TOKEN}` } }
@@ -76,7 +78,10 @@ export default async function handler(req, res) {
     const flags = userData.public_flags || 0;
     const badges = parseBadges(flags);
 
-    const tag = `${userData.username}#${userData.discriminator}`;
+    const tag =
+      userData.discriminator && userData.discriminator !== "0"
+        ? `${userData.username}#${userData.discriminator}`
+        : userData.username;
 
     res.status(200).json({
       id: userData.id,
