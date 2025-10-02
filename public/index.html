@@ -1,35 +1,36 @@
 <!doctype html>
 <html lang="en" class="antialiased">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Discord Lookup API & Bot</title>
-  <meta name="description" content="Discord Lookup API + Bot — server-scoped lookups (requires bot & guild)." />
-  <!-- Tailwind Play CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    // Tailwind config (custom colors)
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            brand: {
-              50: '#e8f3ff',
-              100: '#cfe7ff',
-              200: '#9ecfff',
-              300: '#6db6ff',
-              400: '#3b9eff',
-              500: '#1976D2', // main
-              600: '#1565C0',
-              700: '#114aa0',
-              800: '#0d3a7a',
-              900: '#092a55'
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Discord Lookup API & Bot</title>
+    <meta name="description" content="Discord Lookup API + Bot — server-scoped lookups (requires bot & guild)." />
+    <!-- Tailwind Play CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class', // << important
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                        50: '#e8f3ff',
+                        100: '#cfe7ff',
+                        200: '#9ecfff',
+                        300: '#6db6ff',
+                        400: '#3b9eff',
+                        500: '#1976D2',
+                        600: '#1565C0',
+                        700: '#114aa0',
+                        800: '#0d3a7a',
+                        900: '#092a55'
+                        }
+                    }
+                }
             }
-          }
         }
-      }
-    }
-  </script>
+    </script>
+
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <style>
     .theme-transition {
@@ -43,7 +44,7 @@
     <header class="bg-brand-600 dark:bg-brand-700 text-white py-8 shadow-md">
       <div class="max-w-5xl mx-auto px-4 flex items-center justify-between">
         <div class="flex items-center gap-4">
-          <img src="/imgs/favicon.png" alt="logo" class="w-12 h-12 rounded-md shadow"/>
+          <img src="imgs/favicon.png" alt="logo" class="w-12 h-12 rounded-md shadow"/>
           <div>
             <h1 class="text-2xl font-semibold">Discord Lookup API</h1>
             <p class="text-sm opacity-90">Bot-powered server-scoped user lookups — privacy-first.</p>
