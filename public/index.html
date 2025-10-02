@@ -168,42 +168,44 @@
     const smallToggle = document.getElementById('smallToggle');
 
     const getPreferred = () => {
-      const stored = localStorage.getItem('theme');
-      if (stored) return stored;
-      return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        const stored = localStorage.getItem('theme');
+        if (stored) return stored;
+        return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
     }
 
     function applyTheme(t) {
-      if (t === 'dark') {
+        if (t === 'dark') {
         document.documentElement.classList.add('dark');
-        themeIcon.className = 'fa-solid fa-sun';
-      } else {
+        themeIcon.classList.remove('fa-moon');
+        themeIcon.classList.add('fa-sun');
+        } else {
         document.documentElement.classList.remove('dark');
-        themeIcon.className = 'fa-solid fa-moon';
-      }
+        themeIcon.classList.remove('fa-sun');
+        themeIcon.classList.add('fa-moon');
+        }
     }
 
     let current = getPreferred();
     applyTheme(current);
 
     themeToggle.addEventListener('click', () => {
-      current = current === 'dark' ? 'light' : 'dark';
-      localStorage.setItem('theme', current);
-      applyTheme(current);
+        current = current === 'dark' ? 'light' : 'dark';
+        localStorage.setItem('theme', current);
+        applyTheme(current);
     });
 
     smallToggle.addEventListener('click', () => {
-      current = current === 'dark' ? 'light' : 'dark';
-      localStorage.setItem('theme', current);
-      applyTheme(current);
+        current = current === 'dark' ? 'light' : 'dark';
+        localStorage.setItem('theme', current);
+        applyTheme(current);
     });
 
     window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
-      const stored = localStorage.getItem('theme');
-      if (!stored) {
+        const stored = localStorage.getItem('theme');
+        if (!stored) {
         current = e.matches ? 'dark' : 'light';
         applyTheme(current);
-      }
+        }
     });
 
     const inviteBtn = document.getElementById('inviteBtn');
@@ -211,9 +213,10 @@
     inviteBtn.addEventListener('mouseleave', () => inviteBtn.classList.remove('scale-105'));
 
     if (location.pathname.endsWith('.html')) {
-      const clean = location.pathname.replace(/\.html$/, '') || '/';
-      history.replaceState({}, '', clean + location.search);
+        const clean = location.pathname.replace(/\.html$/, '') || '/';
+        history.replaceState({}, '', clean + location.search);
     }
-  </script>
+    </script>
+
 </body>
 </html>
