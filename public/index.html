@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Discord Lookup API + Bot</title>
+  <meta name="description" content="Lookup API for Discord with bot integration. Requires bot invite and guild reference for secure lookups." />
+  <link rel="icon" type="image/png" href="favicon.png" />
+  <style>
+    body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #ffffff;
+      color: #1565c0;
+      line-height: 1.6;
+    }
+    header {
+      background: #1565c0;
+      color: white;
+      padding: 2rem;
+      text-align: center;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2.5rem;
+    }
+    header p {
+      margin-top: 0.5rem;
+      font-size: 1.2rem;
+      opacity: 0.9;
+    }
+    main {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+    h2 {
+      border-left: 5px solid #1565c0;
+      padding-left: 10px;
+      margin-top: 2rem;
+    }
+    code {
+      background: #f5f5f5;
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: #d32f2f;
+    }
+    pre {
+      background: #f5f5f5;
+      padding: 1rem;
+      border-radius: 6px;
+      overflow-x: auto;
+    }
+    .button {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 10px 20px;
+      background: #1565c0;
+      color: white;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: background 0.2s;
+    }
+    .button:hover {
+      background: #0d47a1;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Discord Lookup API</h1>
+    <p>Simple, safe, and bot-powered user lookups for your Discord server</p>
+  </header>
+
+  <main>
+    <h2>🔹 How it Works</h2>
+    <p>
+      This API requires a <strong>Discord Bot</strong> to be in the server you want to use it with.  
+      When you request user information:
+    </p>
+    <ul>
+      <li>The bot must already be invited to the guild (server).</li>
+      <li>The user you want to lookup <strong>must be in that same guild</strong>.</li>
+      <li>You must include the <code>guild</code> ID in your request to ensure the lookup is scoped only to your community.</li>
+    </ul>
+    <p>This prevents stalking random users across Discord — only server members can be queried.</p>
+
+    <h2>🤖 Invite the Bot</h2>
+    <p>
+      First, invite the bot to your server using this link:
+    </p>
+    <a href="https://discord.com/oauth2/authorize?client_id=YOUR_CLIENT_ID&permissions=8&scope=bot"
+       class="button">Invite Bot</a>
+
+    <h2>📡 API Endpoints</h2>
+    <h3>Lookup a User</h3>
+    <p>Check if a user exists in your server and fetch profile info.</p>
+    <pre>
+GET /api/lookup?guild=GUILD_ID&user=USER_ID
+    </pre>
+    <p><strong>Example Response:</strong></p>
+    <pre>
+{
+  "id": "123456789012345678",
+  "tag": "Username#1234",
+  "badges": ["EARLY_SUPPORTER", "ACTIVE_DEVELOPER"],
+  "avatar": {
+    "id": "a_bcdef12345",
+    "link": "https://cdn.discordapp.com/avatars/123456789012345678/a_bcdef12345.gif",
+    "is_animated": true
+  },
+  "banner": {
+    "id": "banner_123",
+    "link": "https://cdn.discordapp.com/banners/123456789012345678/banner_123.png",
+    "is_animated": false,
+    "color": "#1abc9c"
+  }
+}
+    </pre>
+
+    <h2>⚙️ Requirements</h2>
+    <ul>
+      <li>Bot must be in the server.</li>
+      <li>User must also be in the same server.</li>
+      <li>You must provide the <code>guild</code> and <code>user</code> parameters.</li>
+    </ul>
+  </main>
+</body>
+</html>

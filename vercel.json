@@ -1,0 +1,24 @@
+{
+  "rewrites": [
+    {
+      "source": "/",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/:path",
+      "destination": "/:path.html"
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/:path.html",
+      "destination": "/:path",
+      "permanent": true
+    },
+    {
+      "source": "/invite",
+      "destination": "https://discord.com/oauth2/authorize?client_id=1418180497191993354",
+      "permanent": true
+    }
+  ]
+}
