@@ -1,131 +1,219 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="en" class="antialiased">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Discord Lookup API + Bot</title>
-  <meta name="description" content="Lookup API for Discord with bot integration. Requires bot invite and guild reference for secure lookups." />
-  <link rel="icon" type="image/png" href="favicon.png" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Discord Lookup API & Bot</title>
+  <meta name="description" content="Discord Lookup API + Bot — server-scoped lookups (requires bot & guild)." />
+  <!-- Tailwind Play CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    // Tailwind config (custom colors)
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#e8f3ff',
+              100: '#cfe7ff',
+              200: '#9ecfff',
+              300: '#6db6ff',
+              400: '#3b9eff',
+              500: '#1976D2', // main
+              600: '#1565C0',
+              700: '#114aa0',
+              800: '#0d3a7a',
+              900: '#092a55'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-p2f3Y7+Y1wZkXGqfFq5wq0O3k1q+6c8B6o3j1z7Xq2V6w9Qq+z7K6p4Vgq9k1Z7e1a2b3c4d5e6f7g8h9i0j==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <style>
-    body {
-      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-      margin: 0;
-      padding: 0;
-      background: #ffffff;
-      color: #1565c0;
-      line-height: 1.6;
+    .theme-transition {
+      transition: background-color 160ms ease, color 160ms ease;
     }
-    header {
-      background: #1565c0;
-      color: white;
-      padding: 2rem;
-      text-align: center;
-    }
-    header h1 {
-      margin: 0;
-      font-size: 2.5rem;
-    }
-    header p {
-      margin-top: 0.5rem;
-      font-size: 1.2rem;
-      opacity: 0.9;
-    }
-    main {
-      max-width: 900px;
-      margin: 2rem auto;
-      padding: 0 1rem;
-    }
-    h2 {
-      border-left: 5px solid #1565c0;
-      padding-left: 10px;
-      margin-top: 2rem;
-    }
-    code {
-      background: #f5f5f5;
-      padding: 2px 6px;
-      border-radius: 4px;
-      color: #d32f2f;
-    }
-    pre {
-      background: #f5f5f5;
-      padding: 1rem;
-      border-radius: 6px;
-      overflow-x: auto;
-    }
-    .button {
-      display: inline-block;
-      margin-top: 10px;
-      padding: 10px 20px;
-      background: #1565c0;
-      color: white;
-      border-radius: 6px;
-      text-decoration: none;
-      font-weight: bold;
-      transition: background 0.2s;
-    }
-    .button:hover {
-      background: #0d47a1;
-    }
+    pre code { white-space: pre-wrap; }
   </style>
 </head>
-<body>
-  <header>
-    <h1>Discord Lookup API</h1>
-    <p>Simple, safe, and bot-powered user lookups for your Discord server</p>
-  </header>
+<body class="bg-white text-brand-700 dark:bg-gray-900 dark:text-white theme-transition">
+  <div class="min-h-screen flex flex-col">
+    <header class="bg-brand-600 dark:bg-brand-700 text-white py-8 shadow-md">
+      <div class="max-w-5xl mx-auto px-4 flex items-center justify-between">
+        <div class="flex items-center gap-4">
+          <img src="/favicon.png" alt="logo" class="w-12 h-12 rounded-md shadow"/>
+          <div>
+            <h1 class="text-2xl font-semibold">Discord Lookup API</h1>
+            <p class="text-sm opacity-90">Bot-powered server-scoped user lookups — privacy-first.</p>
+          </div>
+        </div>
 
-  <main>
-    <h2>🔹 How it Works</h2>
-    <p>
-      This API requires a <strong>Discord Bot</strong> to be in the server you want to use it with.  
-      When you request user information:
-    </p>
-    <ul>
-      <li>The bot must already be invited to the guild (server).</li>
-      <li>The user you want to lookup <strong>must be in that same guild</strong>.</li>
-      <li>You must include the <code>guild</code> ID in your request to ensure the lookup is scoped only to your community.</li>
-    </ul>
-    <p>This prevents stalking random users across Discord — only server members can be queried.</p>
+        <div class="flex items-center gap-3">
+          <a id="inviteBtn" href="/invite" class="inline-flex items-center gap-2 bg-white text-brand-700 px-4 py-2 rounded-lg shadow hover:opacity-95 transition">
+            <i class="fa-solid fa-robot"></i>
+            <span>Invite Bot</span>
+          </a>
 
-    <h2>🤖 Invite the Bot</h2>
-    <p>
-      First, invite the bot to your server using this link:
-    </p>
-    <a href="https://discord.com/oauth2/authorize?client_id=YOUR_CLIENT_ID&permissions=8&scope=bot"
-       class="button">Invite Bot</a>
+          <button id="themeToggle" class="p-2 rounded-md bg-white/10 hover:bg-white/20 transition" aria-label="Toggle theme">
+            <i id="themeIcon" class="fa-solid fa-moon"></i>
+          </button>
+        </div>
+      </div>
+    </header>
 
-    <h2>📡 API Endpoints</h2>
-    <h3>Lookup a User</h3>
-    <p>Check if a user exists in your server and fetch profile info.</p>
-    <pre>
-GET /api/lookup?guild=GUILD_ID&user=USER_ID
-    </pre>
-    <p><strong>Example Response:</strong></p>
-    <pre>
-{
+    <main class="flex-1 max-w-5xl mx-auto px-4 py-8 w-full">
+      <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="col-span-2 space-y-4">
+          <div class="p-6 rounded-xl bg-gray-50 dark:bg-gray-800 shadow-md">
+            <h2 class="text-xl font-semibold">How it works</h2>
+            <p class="mt-2 text-sm text-gray-700 dark:text-gray-200">The API is backed by a Discord bot. To use server endpoints you must invite the bot to your server. Lookups are scoped by <code class="rounded px-1 py-0.5 bg-white/80 text-red-600 dark:bg-gray-700 dark:text-red-300">guild</code> ID — the user being queried must be a member of that guild. This prevents cross-server stalking.</p>
+            <div class="mt-4 flex flex-wrap gap-2">
+              <a class="px-3 py-2 rounded-md bg-brand-500 text-white font-medium hover:bg-brand-700 transition" href="/api/members?guild=YOUR_GUILD_ID">Test Members</a>
+              <a class="px-3 py-2 rounded-md border border-gray-200 dark:border-gray-700 text-sm hover:bg-gray-100 dark:hover:bg-gray-700 transition" href="/api/lookup?guild=YOUR_GUILD_ID&user=USER_ID">Test Lookup</a>
+            </div>
+          </div>
+
+          <div class="p-6 rounded-xl bg-gray-50 dark:bg-gray-800 shadow-md">
+            <h3 class="font-semibold">Getting started</h3>
+            <ol class="mt-3 list-decimal list-inside text-sm text-gray-700 dark:text-gray-200 space-y-2">
+              <li>Invite the bot to your server using <code class="rounded px-1 py-0.5 bg-white/80 dark:bg-gray-700">/invite</code> or the OAuth link.</li>
+              <li>Ensure the bot has permission to view server members.</li>
+              <li>Call <code class="rounded px-1 py-0.5 bg-white/80 dark:bg-gray-700">/api/lookup?guild=GUILD_ID&user=USER_ID</code> (only works if user is in guild).</li>
+            </ol>
+          </div>
+
+          <div class="p-6 rounded-xl bg-gray-50 dark:bg-gray-800 shadow-md">
+            <h3 class="font-semibold">API Examples</h3>
+            <div class="mt-3 space-y-3 text-sm text-gray-700 dark:text-gray-200">
+              <div>
+                <div class="font-medium">Guild members</div>
+                <pre class="mt-2 rounded"><code>GET /api/members?guild=1150156572857733170</code></pre>
+                <pre class="mt-2 rounded bg-gray-100 dark:bg-gray-900 p-3 text-sm"><code>{
+  "id": "1150156572857733170",
+  "name": "My Server",
+  "memberCount": 523,
+  "presenceCount": 142
+}</code></pre>
+              </div>
+
+              <div>
+                <div class="font-medium">User lookup (guild-scoped)</div>
+                <pre class="mt-2 rounded"><code>GET /api/lookup?guild=GUILD_ID&user=USER_ID</code></pre>
+                <pre class="mt-2 rounded bg-gray-100 dark:bg-gray-900 p-3 text-sm"><code>{
   "id": "123456789012345678",
   "tag": "Username#1234",
-  "badges": ["EARLY_SUPPORTER", "ACTIVE_DEVELOPER"],
-  "avatar": {
-    "id": "a_bcdef12345",
-    "link": "https://cdn.discordapp.com/avatars/123456789012345678/a_bcdef12345.gif",
-    "is_animated": true
-  },
-  "banner": {
-    "id": "banner_123",
-    "link": "https://cdn.discordapp.com/banners/123456789012345678/banner_123.png",
-    "is_animated": false,
-    "color": "#1abc9c"
-  }
-}
-    </pre>
+  "badges": ["EARLY_SUPPORTER"],
+  "avatar": {...},
+  "banner": {...}
+}</code></pre>
+              </div>
+            </div>
+          </div>
+        </div>
 
-    <h2>⚙️ Requirements</h2>
-    <ul>
-      <li>Bot must be in the server.</li>
-      <li>User must also be in the same server.</li>
-      <li>You must provide the <code>guild</code> and <code>user</code> parameters.</li>
-    </ul>
-  </main>
+        <aside class="space-y-4">
+          <div class="p-4 rounded-xl bg-gray-50 dark:bg-gray-800 shadow-md">
+            <h4 class="font-semibold">Quick Links</h4>
+            <ul class="mt-3 text-sm space-y-2">
+              <li><a href="/api/members?guild=YOUR_GUILD_ID" class="text-brand-600 dark:text-brand-300 hover:underline">/api/members</a></li>
+              <li><a href="/api/lookup?guild=YOUR_GUILD_ID&user=USER_ID" class="text-brand-600 dark:text-brand-300 hover:underline">/api/lookup</a></li>
+              <li><a href="/invite" class="text-brand-600 dark:text-brand-300 hover:underline">Invite Bot</a></li>
+            </ul>
+          </div>
+
+          <div class="p-4 rounded-xl bg-gray-50 dark:bg-gray-800 shadow-md flex items-center gap-3">
+            <div class="flex-1">
+              <h5 class="font-semibold">Privacy by design</h5>
+              <p class="text-sm text-gray-600 dark:text-gray-300">Lookups require a guild reference — you can't query users outside the server the bot is in.</p>
+            </div>
+          </div>
+
+          <div class="p-4 rounded-xl bg-gray-50 dark:bg-gray-800 shadow-md">
+            <h5 class="font-semibold">Theme</h5>
+            <p class="text-sm text-gray-600 dark:text-gray-300">Toggle light/dark or follow system preference.</p>
+            <div class="mt-3">
+              <button id="smallToggle" class="px-3 py-1 rounded bg-brand-600 text-white text-sm">Toggle</button>
+            </div>
+          </div>
+        </aside>
+      </section>
+
+      <section class="mt-8 p-6 rounded-xl bg-gray-50 dark:bg-gray-800 shadow-md">
+        <h3 class="font-semibold">Docs</h3>
+        <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-700 dark:text-gray-200">
+          <div>
+            <h4 class="font-medium">Authentication</h4>
+            <p class="mt-2">No API key required — the serverless function uses a bot token stored in environment variables. Keep your bot token secret.</p>
+          </div>
+          <div>
+            <h4 class="font-medium">Rate limits</h4>
+            <p class="mt-2">This simple serverless API does not implement caching. For heavy usage add caching or rate-limits to avoid Discord rate limit errors.</p>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <footer class="py-6 text-center text-sm text-gray-600 dark:text-gray-400">
+      © 2025 Discord Lookup API — Built by ItsMarwan
+    </footer>
+  </div>
+
+  <script>
+    const root = document.documentElement;
+    const themeToggle = document.getElementById('themeToggle');
+    const themeIcon = document.getElementById('themeIcon');
+    const smallToggle = document.getElementById('smallToggle');
+
+    const getPreferred = () => {
+      const stored = localStorage.getItem('theme');
+      if (stored) return stored;
+      return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+
+    function applyTheme(t) {
+      if (t === 'dark') {
+        document.documentElement.classList.add('dark');
+        themeIcon.className = 'fa-solid fa-sun';
+      } else {
+        document.documentElement.classList.remove('dark');
+        themeIcon.className = 'fa-solid fa-moon';
+      }
+    }
+
+    let current = getPreferred();
+    applyTheme(current);
+
+    themeToggle.addEventListener('click', () => {
+      current = current === 'dark' ? 'light' : 'dark';
+      localStorage.setItem('theme', current);
+      applyTheme(current);
+    });
+
+    smallToggle.addEventListener('click', () => {
+      current = current === 'dark' ? 'light' : 'dark';
+      localStorage.setItem('theme', current);
+      applyTheme(current);
+    });
+
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+      const stored = localStorage.getItem('theme');
+      if (!stored) {
+        current = e.matches ? 'dark' : 'light';
+        applyTheme(current);
+      }
+    });
+
+    const inviteBtn = document.getElementById('inviteBtn');
+    inviteBtn.addEventListener('mouseenter', () => inviteBtn.classList.add('scale-105'));
+    inviteBtn.addEventListener('mouseleave', () => inviteBtn.classList.remove('scale-105'));
+
+    if (location.pathname.endsWith('.html')) {
+      const clean = location.pathname.replace(/\.html$/, '') || '/';
+      history.replaceState({}, '', clean + location.search);
+    }
+  </script>
 </body>
 </html>
