@@ -17,8 +17,9 @@
     },
     {
       "source": "/invite",
-      "destination": "https://discord.com/oauth2/authorize?client_id=1418180497191993354",
+      "destination": "https://discord.com/oauth2/authorize?client_id=1418180497191993354&scope=bot&permissions=65536",
       "permanent": true
     }
   ]
 }
+
