@@ -14,42 +14,60 @@ const BADGE_FLAGS = {
   131072: "EARLY_VERIFIED_BOT_DEVELOPER",
   262144: "DISCORD_CERTIFIED_MODERATOR",
   524288: "BOT_HTTP_INTERACTIONS",
-  4194304: "ACTIVE_DEVELOPER"
+  4194304: "ACTIVE_DEVELOPER",
+  8388608: "QUESTS_BADGE",
+  16777216: "ORBS_BADGE",
 };
 
-function parseBadges(flags) {
+function parseBadges(flags, memberData = null) {
   const result = [];
+
   for (const [bit, name] of Object.entries(BADGE_FLAGS)) {
     const bitInt = Number(bit);
     if ((flags & bitInt) === bitInt) {
-      result.push(name);
+      switch (name) {
+        case "BUG_HUNTER_LEVEL_1":
+          if (flags & 16384) {
+            result.push("BUG_HUNTER_LEVEL_2");
+          } else {
+            result.push("BUG_HUNTER_LEVEL_1");
+          }
+          break;
+        case "QUESTS_BADGE":
+          result.push("QUESTS_BADGE");
+          break;
+        case "ORBS_BADGE":
+          result.push("ORBS_BADGE");
+          break;
+        default:
+          result.push(name);
+      }
     }
   }
+
+  if (memberData?.premium_since) {
+    result.push(`BOOSTER since ${new Date(memberData.premium_since).toISOString()}`);
+  }
+
   return result;
+}
+
+function getCreationDate(id) {
+  if (!id) return null;
+  const DISCORD_EPOCH = 1420070400000n;
+  const timestamp = Number((BigInt(id) >> 22n) + DISCORD_EPOCH);
+  return new Date(timestamp).toISOString();
 }
 
 export default async function handler(req, res) {
   const { guild, user } = req.query;
   const BOT_TOKEN = process.env.DISCORD_BOT_TOKEN;
 
-  if (!guild || !user) {
-    return res.status(400).json({ error: "Missing guild or user ID (?guild=...&user=...)" });
+  if (!user) {
+    return res.status(400).json({ error: "Missing user ID (?user=...)" });
   }
 
   try {
-    // Check membership
-    const memberRes = await fetch(
-      `https://discord.com/api/v10/guilds/${guild}/members/${user}`,
-      { headers: { Authorization: `Bot ${BOT_TOKEN}` } }
-    );
-    if (!memberRes.ok) {
-      const text = await memberRes.text();
-      return res
-        .status(memberRes.status)
-        .json({ error: "User not in guild or cannot access member", details: text });
-    }
-
-    // Fetch user info
     const userRes = await fetch(
       `https://discord.com/api/v10/users/${user}`,
       { headers: { Authorization: `Bot ${BOT_TOKEN}` } }
@@ -62,6 +80,17 @@ export default async function handler(req, res) {
     }
 
     const userData = await userRes.json();
+
+    let memberData = null;
+    if (guild) {
+      const memberRes = await fetch(
+        `https://discord.com/api/v10/guilds/${guild}/members/${user}`,
+        { headers: { Authorization: `Bot ${BOT_TOKEN}` } }
+      );
+      if (memberRes.ok) {
+        memberData = await memberRes.json();
+      }
+    }
 
     const avatarId = userData.avatar;
     const isAvatarAnimated = avatarId && avatarId.startsWith("a_");
@@ -76,16 +105,13 @@ export default async function handler(req, res) {
       : null;
 
     const flags = userData.public_flags || 0;
-    const badges = parseBadges(flags);
-
-    const tag =
-      userData.discriminator && userData.discriminator !== "0"
-        ? `${userData.username}#${userData.discriminator}`
-        : userData.username;
+    const badges = parseBadges(flags, memberData);
 
     res.status(200).json({
       id: userData.id,
-      tag,
+      tag: userData.username,
+      username: userData.username,
+      bot: userData.bot || false,
       badges,
       avatar: {
         id: avatarId,
@@ -98,6 +124,7 @@ export default async function handler(req, res) {
         is_animated: Boolean(isBannerAnimated),
         color: userData.accent_color ?? null,
       },
+      createdAt: getCreationDate(userData.id),
     });
 
   } catch (error) {
