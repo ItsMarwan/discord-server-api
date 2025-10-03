@@ -51,8 +51,10 @@ export default async function handler(req, res) {
       features: data.features || [],
       premiumTier: data.premium_tier,
       premiumSubscriptionCount: data.premium_subscription_count || 0,
-      approximateMemberCount: data.approximate_member_count || 0,
-      approximatePresenceCount: data.approximate_presence_count || 0,
+
+      memberCount: data.approximate_member_count || 0,
+      presenceCount: data.approximate_presence_count || 0,
+
       ownerId: data.owner_id || null,
       joinedAt: data.joined_at || null,
       afkTimeout: data.afk_timeout,
