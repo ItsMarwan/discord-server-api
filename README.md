@@ -19,6 +19,9 @@ A: Because The [Bot](https://discord.com/oauth2/authorize?client_id=141818049719
 Q: Is It Fixable?\
 A: No. But Let Me Know If You Find a Way!
 
+Q: Is It Safe?\
+A: Yes 100%! Just Make Sure **NEVER** Give Admin Or Any Other Dangerous Permission To The Bot Incase It Gets Compromised
+
 ## API Reference
 
 #### Get Server Info
