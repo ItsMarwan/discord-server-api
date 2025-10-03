@@ -23,13 +23,13 @@ A: No. But Let Me Know If You Find a Way!
 
 #### Get Server Info
 
-```http
+```
   GET /api/discord-server-api-js/guild?guild=GUILD_ID
 ```
 
 #### Get Server Member Info
 
-```http
+```
   GET /api/discord-server-api-js/user?guild=GUILD_ID&user=USER_ID
 ```
 
