@@ -21,7 +21,7 @@ export default async function handler(req, res) {
     }
 
     const data = await response.json();
-    
+
     const iconUrl = data.icon
       ? `https://cdn.discordapp.com/icons/${data.id}/${data.icon}.png?size=1024`
       : null;
@@ -53,19 +53,12 @@ export default async function handler(req, res) {
       premiumSubscriptionCount: data.premium_subscription_count || 0,
       approximateMemberCount: data.approximate_member_count || 0,
       approximatePresenceCount: data.approximate_presence_count || 0,
-      roles: data.roles || [],
-      emojis: data.emojis || [],
-      stickers: data.stickers || [],
-      preferredLocale: data.preferred_locale,
-      afkTimeout: data.afk_timeout,
-      afkChannelId: data.afk_channel_id || null,
-      systemChannelId: data.system_channel_id || null,
-      rulesChannelId: data.rules_channel_id || null,
-      publicUpdatesChannelId: data.public_updates_channel_id || null,
       ownerId: data.owner_id || null,
       joinedAt: data.joined_at || null,
+      afkTimeout: data.afk_timeout,
       maxMembers: data.max_members || null,
       maxPresences: data.max_presences || null,
+      preferredLocale: data.preferred_locale,
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
