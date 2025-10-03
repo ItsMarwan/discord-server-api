@@ -32,52 +32,21 @@
   </script>
   <style>
     .theme-transition { transition: background-color 160ms ease, color 160ms ease; }
-    pre {
-      scrollbar-width: thin;           
-      scrollbar-color: #1976D2 #f1f5f9;
-    }
-    
-    pre::-webkit-scrollbar {
-      height: 8px;                    
-    }
-    
-    pre::-webkit-scrollbar-track {
-      background: #f1f5f9;                
-      border-radius: 8px;
-    }
-    
-    pre::-webkit-scrollbar-thumb {
-      background: #1976D2;              
-      border-radius: 8px;
-    }
-    
-    pre::-webkit-scrollbar-thumb:hover {
-      background: #1565C0;            
-    }
-    
-    .dark pre {
-      scrollbar-color: #3b9eff #1f2937;
-    }
-    
-    .dark pre::-webkit-scrollbar-track {
-      background: #1f2937;              
-    }
-    
-    .dark pre::-webkit-scrollbar-thumb {
-      background: #3b9eff;               
-    }
-    
-    .dark pre::-webkit-scrollbar-thumb:hover {
-      background: #1976D2;
-    }
-
+    pre code { white-space: pre; }
+    pre::-webkit-scrollbar { height: 8px; }
+    pre::-webkit-scrollbar-track { background: #1e293b; }
+    pre::-webkit-scrollbar-thumb { background: #1976D2; border-radius: 4px; }
+    pre::-webkit-scrollbar-thumb:hover { background: #1565C0; }
+    .dark pre { scrollbar-color: #3b9eff #1f2937; }
+    .dark pre::-webkit-scrollbar-track { background: #1f2937; }
+    .dark pre::-webkit-scrollbar-thumb { background: #3b9eff; }
+    .dark pre::-webkit-scrollbar-thumb:hover { background: #1976D2; }
   </style>
-
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 </head>
 <body class="bg-white text-brand-700 dark:bg-gray-900 dark:text-white theme-transition">
   <div class="min-h-screen flex flex-col">
-    
+
     <header class="bg-brand-600 dark:bg-brand-700 text-white py-4 md:py-8 shadow-md">
       <div class="max-w-5xl mx-auto px-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div class="flex items-center gap-3">
@@ -103,11 +72,11 @@
 
     <main class="flex-1 max-w-5xl mx-auto px-4 py-6 md:py-8 w-full">
       <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        
+
         <div class="col-span-2 space-y-4">
           <div class="p-4 md:p-6 rounded-xl bg-gray-50 dark:bg-gray-800 shadow-md">
             <h2 class="text-lg md:text-xl font-semibold">How it works</h2>
-            <p class="mt-2 text-sm md:text-base text-gray-700 dark:text-gray-200">The API is backed by a Discord bot... <code class="rounded px-1 py-0.5 bg-white/80 text-red-600 dark:bg-gray-700 dark:text-red-300">guild</code> ID — the user must be a member of that guild.</p>
+            <p class="mt-2 text-sm md:text-base text-gray-700 dark:text-gray-200">The API is backed by a Discord bot. To use server endpoints you must invite the bot to your server. Lookups are scoped by <code class="rounded px-1 py-0.5 bg-white/80 text-red-600 dark:bg-gray-700 dark:text-red-300">guild</code> ID — the user being queried must be a member of that guild. This prevents cross-server stalking.</p>
             <div class="mt-4 flex flex-wrap gap-2">
               <a class="px-3 py-2 rounded-md bg-brand-500 text-white text-sm md:text-base font-medium hover:bg-brand-700 transition" target="_blank" href="/api/discord-server-api/guild?guild=1150156572857733170">Test Guild Lookup</a>
               <a class="px-3 py-2 rounded-md border border-gray-200 dark:border-gray-700 text-xs md:text-sm hover:bg-gray-100 dark:hover:bg-gray-700 transition" target="_blank" href="/api/discord-server-api/user?guild=1150156572857733170&user=999407143646142514">Test User Lookup</a>
@@ -117,76 +86,76 @@
           <div class="p-4 md:p-6 rounded-xl bg-gray-50 dark:bg-gray-800 shadow-md">
             <h3 class="font-semibold">Getting started</h3>
             <ol class="mt-3 list-decimal list-inside text-sm md:text-base text-gray-700 dark:text-gray-200 space-y-2">
-              <li>Invite the bot with OAuth link.</li>
-              <li>Ensure it can view members.</li>
-              <li>Call <code class="rounded px-1 py-0.5 bg-white/80 dark:bg-gray-700">/api/discord-server-api/user?guild=GUILD_ID&user=999407143646142514</code></li>
+              <li>Invite the bot to your server using <code class="rounded px-1 py-0.5 bg-white/80 dark:bg-gray-700">https://discord.com/oauth2/authorize?client_id=1418180497191993354&scope=bot&permissions=65536</code> or the OAuth link.</li>
+              <li>Ensure the bot has permission to view server members.</li>
+              <li>Call <code class="rounded px-1 py-0.5 bg-white/80 dark:bg-gray-700">/api/discord-server-api/user?guild=GUILD_ID&user=999407143646142514</code> (only works if user is in guild).</li>
             </ol>
           </div>
 
           <div class="p-4 md:p-6 rounded-xl bg-gray-50 dark:bg-gray-800 shadow-md">
             <h3 class="font-semibold">API Examples</h3>
             <div class="mt-3 space-y-3 text-sm md:text-base text-gray-700 dark:text-gray-200">
-          
+
               <div>
                 <div class="font-medium">Get Guild Info</div>
                 <pre class="mt-2 rounded text-xs md:text-sm overflow-x-auto"><code>GET /api/discord-server-api/guild?guild=1150156572857733170</code></pre>
                 <pre class="mt-2 rounded bg-gray-100 dark:bg-gray-900 p-3 text-xs md:text-sm overflow-x-auto whitespace-pre"><code>{
-            "id": "1150156572857733170",
-            "name": "ItsMarwan's Blue Planet",
-            "description": "ItsMarwan Official Discord Server! If Y...",
-            "icon": "https://cdn.discordapp.com/icons/...",
-            "banner": null,
-            "splash": null,
-            "discoverySplash": "https://cdn.discordapp.com/discovery-splashes/...",
-            "vanityURL": "itsmarwan-s-blue-planet-1...",
-            "verificationLevel": 3,
-            "explicitContentFilter": 2,
-            "mfaLevel": 1,
-            "nsfwLevel": 0,
-            "features": [
-              "GUILD_ONBOARDING_HAS_PROMPTS",
-              "ENABLED_DISCOVERA..."
-            ],
-            "premiumTier": 0,
-            "premiumSubscriptionCount": 1,
-            "approximateMemberCount": 1754,
-            "approximatePresenceCount": 578,
-            "ownerId": "999407143646142514",
-            "joinedAt": null,
-            "afkTimeout": 900,
-            "maxMembers": 25000000,
-            "maxPresences": null,
-            "preferredLocale": "en-US"
-          }</code></pre>
+  "id": "1150156572857733170",
+  "name": "ItsMarwan's Blue Planet",
+  "description": "ItsMarwan Official Discord Server! If Y...",
+  "icon": "https://cdn.discordapp.com/icons/...",
+  "banner": null,
+  "splash": null,
+  "discoverySplash": "https://cdn.discordapp.com/discovery-splashes/...",
+  "vanityURL": "itsmarwan-s-blue-planet-1...",
+  "verificationLevel": 3,
+  "explicitContentFilter": 2,
+  "mfaLevel": 1,
+  "nsfwLevel": 0,
+  "features": [
+    "GUILD_ONBOARDING_HAS_PROMPTS",
+    "ENABLED_DISCOVERA..."
+  ],
+  "premiumTier": 0,
+  "premiumSubscriptionCount": 1,
+  "approximateMemberCount": 1754,
+  "approximatePresenceCount": 578,
+  "ownerId": "999407143646142514",
+  "joinedAt": null,
+  "afkTimeout": 900,
+  "maxMembers": 25000000,
+  "maxPresences": null,
+  "preferredLocale": "en-US"
+}</code></pre>
               </div>
-          
+
               <div>
                 <div class="font-medium">User lookup (guild-scoped)</div>
                 <pre class="mt-2 rounded text-xs md:text-sm overflow-x-auto"><code>GET /api/discord-server-api/user?guild=GUILD_ID&user=999407143646142514</code></pre>
                 <pre class="mt-2 rounded bg-gray-100 dark:bg-gray-900 p-3 text-xs md:text-sm overflow-x-auto whitespace-pre"><code>{
-            "id": "999407143646142514",
-            "tag": "itsmarwan.",
-            "username": "itsmarwan.",
-            "bot": false,
-            "badges": [
-              "HYPESQUAD_BRAVERY",
-              "ACTIVE_DEVELOPER"
-            ],
-            "avatar": {
-              "id": "23cbb86f9144f88876034a82ba5f4b61",
-              "link": "https://cdn.discordapp.com/avatars/...",
-              "is_animated": false
-            },
-            "banner": {
-              "id": null,
-              "link": null,
-              "is_animated": false,
-              "color": 460033
-            },
-            "createdAt": "2022-07-20T20:07:11.132Z"
-          }</code></pre>
+  "id": "999407143646142514",
+  "tag": "itsmarwan.",
+  "username": "itsmarwan.",
+  "bot": false,
+  "badges": [
+    "HYPESQUAD_BRAVERY",
+    "ACTIVE_DEVELOPER"
+  ],
+  "avatar": {
+    "id": "23cbb86f9144f88876034a82ba5f4b61",
+    "link": "https://cdn.discordapp.com/avatars/...",
+    "is_animated": false
+  },
+  "banner": {
+    "id": null,
+    "link": null,
+    "is_animated": false,
+    "color": 460033
+  },
+  "createdAt": "2022-07-20T20:07:11.132Z"
+}</code></pre>
               </div>
-          
+
             </div>
           </div>
 
@@ -197,8 +166,8 @@
           <div class="p-4 rounded-xl bg-gray-50 dark:bg-gray-800 shadow-md">
             <h4 class="font-semibold">Quick Links</h4>
             <ul class="mt-3 text-sm space-y-2">
-              <li><a href="/api/discord-server-api/guild?guild=1150156572857733170" target="_blank" class="text-brand-600 dark:text-brand-300 hover:underline">/guild</a></li>
-              <li><a href="/api/discord-server-api/user?guild=1150156572857733170&user=999407143646142514" target="_blank" class="text-brand-600 dark:text-brand-300 hover:underline">/user</a></li>
+              <li><a href="/api/discord-server-api/guild?guild=1150156572857733170" target="_blank" class="text-brand-600 dark:text-brand-300 hover:underline">/api/discord-server-api/guild</a></li>
+              <li><a href="/api/discord-server-api/user?guild=1150156572857733170&user=999407143646142514" target="_blank" class="text-brand-600 dark:text-brand-300 hover:underline">/api/discord-server-api/user</a></li>
               <li><a href="https://discord.com/oauth2/authorize?client_id=1418180497191993354&scope=bot&permissions=65536" target="_blank" class="text-brand-600 dark:text-brand-300 hover:underline">Invite Bot</a></li>
             </ul>
           </div>
@@ -206,15 +175,50 @@
           <div class="p-4 rounded-xl bg-gray-50 dark:bg-gray-800 shadow-md flex flex-col sm:flex-row items-start sm:items-center gap-3">
             <div class="flex-1">
               <h5 class="font-semibold">Privacy by design</h5>
-              <p class="text-sm text-gray-600 dark:text-gray-300">Lookups require a guild reference — you can't query users outside the server.</p>
+              <p class="text-sm text-gray-600 dark:text-gray-300">Lookups require a guild reference — you can't query users outside the server the bot is in.</p>
             </div>
           </div>
 
           <div class="p-4 rounded-xl bg-gray-50 dark:bg-gray-800 shadow-md">
-            <h5 class="font-semibold">Theme</h5>
-            <p class="text-sm text-gray-600 dark:text-gray-300">Toggle light/dark or follow system.</p>
-            <div class="mt-3">
-              <button id="smallToggle" class="px-3 py-1 rounded bg-brand-600 text-white text-sm">Toggle</button>
+            <h5 class="font-semibold">Host yourself</h5>
+            <p class="text-sm text-gray-600 dark:text-gray-300 mb-3">This project is open source! You can deploy it yourself using Vercel:</p>
+            <a href="https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fitsmarwan%2Fdiscord-server-api&env=DISCORD_BOT_TOKEN&envDescription=Discord%20bot%20token&envLink=https%3A%2F%2Fdiscord.com%2Fdevelopers%2Fdocs%2Fquick-start%2Fgetting-started&project-name=discord-server-api&repository-name=discord-server-api" target="_blank">
+              <img src="https://vercel.com/button" alt="Deploy with Vercel" />
+            </a>
+            <p class="mt-3 text-sm text-gray-600 dark:text-gray-300">Source code available on <a href="https://github.com/itsmarwan/discord-server-api" class="text-brand-600 dark:text-brand-300 hover:underline" target="_blank">GitHub</a>.</p>
+          </div>
+
+          <div class="p-4 rounded-xl bg-gray-50 dark:bg-gray-800 shadow-md">
+            <h5 class="font-semibold">Features</h5>
+            <ul class="mt-2 list-disc list-inside text-sm text-gray-600 dark:text-gray-300 space-y-1">
+              <li>No Account Needed</li>
+              <li>No API Key Required</li>
+              <li>Online 24/7 via Vercel</li>
+              <li>Light/Dark Mode Toggle</li>
+              <li>No Hosting Needed</li>
+              <li>Easy To Use</li>
+              <li>Has Discord Bot (required for guild lookup to work)</li>
+            </ul>
+          </div>
+
+          <div class="p-4 rounded-xl bg-gray-50 dark:bg-gray-800 shadow-md">
+            <h5 class="font-semibold">FAQ</h5>
+            <div class="mt-2 text-sm text-gray-600 dark:text-gray-300 space-y-3">
+              <div>
+                <p><strong>Q: Why This Happens?</strong><br>A: Because the <a href="https://discord.com/oauth2/authorize?client_id=1418180497191993354&scope=bot&permissions=65536" target="_blank" class="text-brand-600 dark:text-brand-300 hover:underline">Bot</a> isn't in the server. Therefore it doesn’t see the server.</p>
+              </div>
+              <div>
+                <p><strong>Q: Is It Fixable?</strong><br>A: No. But let me know if you find a way!</p>
+              </div>
+              <div>
+                <p><strong>Q: Is It Safe?</strong><br>A: Yes 100%! Just make sure <strong>NEVER</strong> give Admin or dangerous permissions to the bot in case it gets compromised.</p>
+              </div>
+              <div>
+                <p><strong>Q: What Does The Bot Do?</strong><br>A: The bot does absolutely nothing, it has 0 lines of code.</p>
+              </div>
+              <div>
+                <p><strong>Q: Why Have a Discord Bot?</strong><br>A: Because if the bot isn’t in the server you want to lookup, it will return nothing.</p>
+              </div>
             </div>
           </div>
         </aside>
@@ -225,11 +229,11 @@
         <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4 text-sm md:text-base text-gray-700 dark:text-gray-200">
           <div>
             <h4 class="font-medium">Authentication</h4>
-            <p class="mt-2">No API key required — serverless function uses bot token stored securely.</p>
+            <p class="mt-2">No API key required — the serverless function uses a bot token stored in environment variables. Keep your bot token secret.</p>
           </div>
           <div>
             <h4 class="font-medium">Rate limits</h4>
-            <p class="mt-2">No caching implemented. Add your own if using heavily to avoid Discord rate limit errors.</p>
+            <p class="mt-2">This simple serverless API does not implement caching. For heavy usage add caching or rate-limits to avoid Discord rate limit errors.</p>
           </div>
         </div>
       </section>
@@ -241,31 +245,40 @@
   </div>
 
   <script>
-    const root = document.documentElement;
     const themeToggle = document.getElementById('themeToggle');
     const themeIcon = document.getElementById('themeIcon');
     const smallToggle = document.getElementById('smallToggle');
-    const getPreferred = () => localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-    function applyTheme(t) {
-      if (t === 'dark') {
+    
+    function setTheme(theme) {
+      if (theme === 'dark') {
         document.documentElement.classList.add('dark');
-        themeIcon.classList.replace('fa-moon','fa-sun');
+        themeIcon.classList.replace('fa-moon', 'fa-sun');
       } else {
         document.documentElement.classList.remove('dark');
-        themeIcon.classList.replace('fa-sun','fa-moon');
+        themeIcon.classList.replace('fa-sun', 'fa-moon');
       }
     }
-    let current = getPreferred();
-    applyTheme(current);
-    [themeToggle, smallToggle].forEach(btn => btn.addEventListener('click', () => {
-      current = current === 'dark' ? 'light' : 'dark';
-      localStorage.setItem('theme', current);
-      applyTheme(current);
-    }));
+    
+    function getPreferredTheme() {
+      return localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    }
+    
+    let currentTheme = getPreferredTheme();
+    setTheme(currentTheme);
+    
+    [themeToggle, smallToggle].forEach(btn => {
+      if (btn) {
+        btn.addEventListener('click', () => {
+          currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+          localStorage.setItem('theme', currentTheme);
+          setTheme(currentTheme);
+        });
+      }
+    });
+    
     window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
       if (!localStorage.getItem('theme')) {
-        current = e.matches ? 'dark' : 'light';
-        applyTheme(current);
+        setTheme(e.matches ? 'dark' : 'light');
       }
     });
   </script>
