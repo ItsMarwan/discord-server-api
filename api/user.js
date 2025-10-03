@@ -14,9 +14,7 @@ const BADGE_FLAGS = {
   131072: "EARLY_VERIFIED_BOT_DEVELOPER",
   262144: "DISCORD_CERTIFIED_MODERATOR",
   524288: "BOT_HTTP_INTERACTIONS",
-  4194304: "ACTIVE_DEVELOPER",
-  8388608: "QUESTS_BADGE",
-  16777216: "ORBS_BADGE",
+  4194304: "ACTIVE_DEVELOPER"
 };
 
 function parseBadges(flags, memberData = null) {
@@ -25,22 +23,10 @@ function parseBadges(flags, memberData = null) {
   for (const [bit, name] of Object.entries(BADGE_FLAGS)) {
     const bitInt = Number(bit);
     if ((flags & bitInt) === bitInt) {
-      switch (name) {
-        case "BUG_HUNTER_LEVEL_1":
-          if (flags & 16384) {
-            result.push("BUG_HUNTER_LEVEL_2");
-          } else {
-            result.push("BUG_HUNTER_LEVEL_1");
-          }
-          break;
-        case "QUESTS_BADGE":
-          result.push("QUESTS_BADGE");
-          break;
-        case "ORBS_BADGE":
-          result.push("ORBS_BADGE");
-          break;
-        default:
-          result.push(name);
+      if (name === "BUG_HUNTER_LEVEL_1" && (flags & 16384)) {
+        result.push("BUG_HUNTER_LEVEL_2");
+      } else {
+        result.push(name);
       }
     }
   }
