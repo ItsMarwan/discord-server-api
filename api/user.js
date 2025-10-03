@@ -14,7 +14,8 @@ const BADGE_FLAGS = {
   131072: "EARLY_VERIFIED_BOT_DEVELOPER",
   262144: "DISCORD_CERTIFIED_MODERATOR",
   524288: "BOT_HTTP_INTERACTIONS",
-  4194304: "ACTIVE_DEVELOPER"
+  4194304: "ACTIVE_DEVELOPER",
+  262144: "MODERATOR_PROGRAMS_ALUMNI"
 };
 
 function parseBadges(flags, memberData = null) {
@@ -49,9 +50,7 @@ export default async function handler(req, res) {
   const { guild, user } = req.query;
   const BOT_TOKEN = process.env.DISCORD_BOT_TOKEN;
 
-  if (!user) {
-    return res.status(400).json({ error: "Missing user ID (?user=...)" });
-  }
+  if (!user) return res.status(400).json({ error: "Missing user ID (?user=...)" });
 
   try {
     const userRes = await fetch(
@@ -60,9 +59,7 @@ export default async function handler(req, res) {
     );
     if (!userRes.ok) {
       const text = await userRes.text();
-      return res
-        .status(userRes.status)
-        .json({ error: "Cannot fetch user info", details: text });
+      return res.status(userRes.status).json({ error: "Cannot fetch user info", details: text });
     }
 
     const userData = await userRes.json();
@@ -73,9 +70,7 @@ export default async function handler(req, res) {
         `https://discord.com/api/v10/guilds/${guild}/members/${user}`,
         { headers: { Authorization: `Bot ${BOT_TOKEN}` } }
       );
-      if (memberRes.ok) {
-        memberData = await memberRes.json();
-      }
+      if (memberRes.ok) memberData = await memberRes.json();
     }
 
     const avatarId = userData.avatar;
