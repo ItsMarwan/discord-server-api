@@ -21,12 +21,51 @@ export default async function handler(req, res) {
     }
 
     const data = await response.json();
+    
+    const iconUrl = data.icon
+      ? `https://cdn.discordapp.com/icons/${data.id}/${data.icon}.png?size=1024`
+      : null;
+    const bannerUrl = data.banner
+      ? `https://cdn.discordapp.com/banners/${data.id}/${data.banner}.png?size=1024`
+      : null;
+    const splashUrl = data.splash
+      ? `https://cdn.discordapp.com/splashes/${data.id}/${data.splash}.png?size=1024`
+      : null;
+    const discoverySplashUrl = data.discovery_splash
+      ? `https://cdn.discordapp.com/discovery-splashes/${data.id}/${data.discovery_splash}.png?size=1024`
+      : null;
 
     res.status(200).json({
       id: data.id,
       name: data.name,
-      memberCount: data.approximate_member_count,
-      presenceCount: data.approximate_presence_count,
+      description: data.description || null,
+      icon: iconUrl,
+      banner: bannerUrl,
+      splash: splashUrl,
+      discoverySplash: discoverySplashUrl,
+      vanityURL: data.vanity_url_code || null,
+      verificationLevel: data.verification_level,
+      explicitContentFilter: data.explicit_content_filter,
+      mfaLevel: data.mfa_level,
+      nsfwLevel: data.nsfw_level,
+      features: data.features || [],
+      premiumTier: data.premium_tier,
+      premiumSubscriptionCount: data.premium_subscription_count || 0,
+      approximateMemberCount: data.approximate_member_count || 0,
+      approximatePresenceCount: data.approximate_presence_count || 0,
+      roles: data.roles || [],
+      emojis: data.emojis || [],
+      stickers: data.stickers || [],
+      preferredLocale: data.preferred_locale,
+      afkTimeout: data.afk_timeout,
+      afkChannelId: data.afk_channel_id || null,
+      systemChannelId: data.system_channel_id || null,
+      rulesChannelId: data.rules_channel_id || null,
+      publicUpdatesChannelId: data.public_updates_channel_id || null,
+      ownerId: data.owner_id || null,
+      joinedAt: data.joined_at || null,
+      maxMembers: data.max_members || null,
+      maxPresences: data.max_presences || null,
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
